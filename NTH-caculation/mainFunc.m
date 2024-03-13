@@ -48,7 +48,7 @@ mPNFmatrix = table2array(mPNFtable);
 Phi = mPNFmatrix(:,2);
 
 ANStable = zeros(8,N_cv);  %定义结果表
-ANStable(2,1) = t_fin;     %入口温度赋值
+ANStable(2,1) = t_fin;     %入口温度赋值(℃)
 
 for i = 1:1:N_cv
     [t_f2, DNBR, t_cs, t_ci, t_u, t_o, H_f] = CTRLvolume(ANStable(2,i), Phi(i,1), N_cv, q_max, ql_max);
@@ -69,25 +69,25 @@ end
 
 %% 热管最大焓升
 
-H_in = refpropm('H','T',t_fin,'P',Pres,'water');            %热管冷却剂入口处焓值
-H_out = refpropm('H','T',ANStable(2,20),'P',Pres,'water');  %热管出口处冷却剂焓值
+H_in = refpropm('H','T',t_fin+273.15,'P',Pres,'water');            %热管冷却剂入口处焓值(J/kg)
+H_out = refpropm('H','T',ANStable(2,20)+273.15,'P',Pres,'water');  %热管出口处冷却剂焓值(J/kg)
 
-delH_fmax = H_out-H_in;  %热管最大焓升
+delH_fmax = H_out-H_in;  %热管最大焓升(J/kg)
 
 %% 压降计算
 
-g = 9.8;        %重力加速度
+g = 9.8;        %重力加速度(N/kg)
 Kin = 0.75;     %入口局部阻力系数
 Kout = 1.0;     %出口局部阻力系数
 Kgr = 1.05;     %定位格架局部阻力系数
 
 % 摩擦压降
-tf_ = 0.5*(t_fin+t_fout);                               %冷却剂平均温度
-Af = m*n*(GP^2-0.25*pi*d_cs^2);                         %总流通截面积
-De = 4*(GP^2-pi/4*d_cs^2)/(pi*d_cs);                    %单元通道当量直径
-rhof_ = refpropm('D','T',tf_+273.15,'P',Pres,'water');  %冷却剂平均密度
-vf_ = Wt*(1-Bf)/(Af*rhof_);                             %冷却剂平均流速
-vis = refpropm('$','T',tf_+273.15,'P',Pres,'water');    %运动粘度
+tf_ = 0.5*(t_fin+t_fout);                               %冷却剂平均温度(℃)
+Af = m*n*(GP^2-0.25*pi*d_cs^2);                         %总流通截面积(m^2)
+De = 4*(GP^2-pi/4*d_cs^2)/(pi*d_cs);                    %单元通道当量直径(m)
+rhof_ = refpropm('D','T',tf_+273.15,'P',Pres,'water');  %冷却剂平均密度(kg/m^3)
+vf_ = Wt*(1-Bf)/(Af*rhof_);                             %冷却剂平均流速(m/s)
+vis = refpropm('$','T',tf_+273.15,'P',Pres,'water');    %运动粘度(m^2/s)
 Re = vf_*De/(0.0001*vis);                               %计算该处的雷诺数
 
 f = 0.3164/Re^0.25;
@@ -95,12 +95,12 @@ dPf = f*Hv*rhof_*vf_^2/(2*De);
 % 单相流体提升压降计算
 dPel = rhof_*g*Hv;
 % 进口局部压降计算
-rho_in = refpropm('D','T',t_fin+273.15,'P',Pres,'water');   %冷却剂平均密度
-vf_in = Wt*(1-Bf)/(Af*rho_in);                              %冷却剂平均流速
+rho_in = refpropm('D','T',t_fin+273.15,'P',Pres,'water');   %冷却剂平均密度(kg/m^3)
+vf_in = Wt*(1-Bf)/(Af*rho_in);                              %冷却剂平均流速(m/s)
 dPin = 0.5*Kin*rhof_*vf_in^2;
 % 出口局部压降计算
-rho_out = refpropm('D','T',t_fout+273.15,'P',Pres,'water'); %冷却剂平均密度
-vf_out = Wt*(1-Bf)/(Af*rho_out);                            %冷却剂平均流速
+rho_out = refpropm('D','T',t_fout+273.15,'P',Pres,'water'); %冷却剂平均密度(kg/m^3)
+vf_out = Wt*(1-Bf)/(Af*rho_out);                            %冷却剂平均流速(m/s)
 dPout = 0.5*Kout*rho_out*vf_out^2;
 % 定位搁架出口压降计算
 dPgr = 0.5*Kgr*rhof_*vf_^2;
@@ -111,7 +111,7 @@ dP = dPf+dPel+dPin+dPout+dPgr;
 
 disp('控制体计算结果如下表所示：');
 disp(' ');
-Nam = {'控制体编号';'节点出口温度';'DNBR';'包壳外表面温度';'包壳内表面温度';'燃料芯块表面温度';'燃料芯块中心温度';'控制体焓'};
+Nam = {'控制体编号';'节点出口温度(℃)';'DNBR';'包壳外表面温度(℃)';'包壳内表面温度(℃)';'燃料芯块表面温度(℃)';'燃料芯块中心温度(℃)';'控制体焓(J/kg)'};
 DISPLAY = [Nam, num2cell(ANStable)]';
 disp(DISPLAY);
 disp(' ');
@@ -157,5 +157,5 @@ legend('DNBR');
 figure(5)
 plot(ANStable(1,:),ANStable(8,:),'r^-');
 xlabel('控制体编号');
-ylabel('控制体出口焓值');
+ylabel('控制体出口焓值(J/kg)');
 legend('控制体出口焓');
