@@ -13,7 +13,7 @@ d_cs = 9.5e-3;  %燃料元件包壳外径(m)
 d_ci = 8.36e-3; %包壳内表面直径(m)
 d_u = 8.19e-3;  %燃料芯块直径(m)
 GP = 12.6e-3;   %燃料棒直径/栅距(m)
-Kg = 5678;      %包壳和芯块间气隙等效放热系数(kJ/K)
+Kg = 5678;      %包壳和芯块间气隙等效放热系数(kJ/m·K)
 delH = Hv/N_cv; %控制体单元步长
 m = 157;        %燃料组件数
 n = 264;        %单个燃料组件燃料棒数
@@ -51,13 +51,13 @@ end
 
 % 求解控制体焓升
 
-H_f = refpropm('H','T',t_f2+273.15,'P',Pres,'water');        %热管出口处冷却剂焓值(J/K)
+H_f = refpropm('H','T',t_f2+273.15,'P',Pres,'water');  %热管出口处冷却剂焓值(J/kg)
 
 % 求解临界热流量与烧毁比
-Hfin = refpropm('H','T',t_f1+273.15,'P',Pres,'water'); %控制体入口冷却剂的比焓(J/K)
-Hfs = refpropm('H','P',Pres,'Q',0,'water');            %运行压力下的饱和水比焓(J/K)
-Hgs = refpropm('H','P',Pres,'Q',1,'water');            %运行压力下的饱和蒸汽比焓(J/K)
-H = refpropm('H','T',t_f2+273.15,'P',Pres,'water');    %控制体出口处冷却剂比焓(J/K)
+Hfin = refpropm('H','T',t_f1+273.15,'P',Pres,'water'); %控制体入口冷却剂的比焓(J/kg)
+Hfs = refpropm('H','P',Pres,'Q',0,'water');            %运行压力下的饱和水比焓(J/kg)
+Hgs = refpropm('H','P',Pres,'Q',1,'water');            %运行压力下的饱和蒸汽比焓(J/kg)
+H = refpropm('H','T',t_f2+273.15,'P',Pres,'water');    %控制体出口处冷却剂比焓(J/kg)
 x_e = (H-Hfs)/(Hgs-Hfs);                               %该控制体处含汽量
 G = rhof_*v_;    %冷却剂质量流速(kg/m^2*s)
 p = Pres*1000;   %换单位(Pa)
