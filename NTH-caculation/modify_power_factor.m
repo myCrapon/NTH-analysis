@@ -1,7 +1,7 @@
 clc
 clear
 % 轴向功率归一化因子拟合(PNF)
-Hv = 4.2672;
+Hv = 4.2672;    %堆芯高度(m)
 PNFtable = readtable('轴向功率归一化因子分布.csv');
 PNFmatrix = table2array(PNFtable);
 
